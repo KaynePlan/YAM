@@ -1,0 +1,573 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="YAM_StorageModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityContainer Name="YAM_StorageModelStoreContainer">
+          <EntitySet Name="Album" EntityType="YAM_StorageModel.Store.Album" store:Type="Tables" />
+          <EntitySet Name="Albumtitle" EntityType="YAM_StorageModel.Store.Albumtitle" store:Type="Tables" />
+          <EntitySet Name="Artist" EntityType="YAM_StorageModel.Store.Artist" store:Type="Tables" />
+          <EntitySet Name="Genre" EntityType="YAM_StorageModel.Store.Genre" store:Type="Tables" />
+          <EntitySet Name="Lang" EntityType="YAM_StorageModel.Store.Lang" store:Type="Tables" />
+          <EntitySet Name="Lastsearch" EntityType="YAM_StorageModel.Store.Lastsearch" store:Type="Tables" />
+          <EntitySet Name="Playlist" EntityType="YAM_StorageModel.Store.Playlist" store:Type="Tables" />
+          <EntitySet Name="Playlistitem" EntityType="YAM_StorageModel.Store.Playlistitem" store:Type="Tables" />
+          <EntitySet Name="Title" EntityType="YAM_StorageModel.Store.Title" store:Type="Tables" />
+          <EntitySet Name="Titleartist" EntityType="YAM_StorageModel.Store.Titleartist" store:Type="Tables" />
+          <AssociationSet Name="FK_Album_Albumtitle" Association="YAM_StorageModel.Store.FK_Album_Albumtitle">
+            <End Role="Album" EntitySet="Album" />
+            <End Role="Albumtitle" EntitySet="Albumtitle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Playlist_PlaylistItem" Association="YAM_StorageModel.Store.FK_Playlist_PlaylistItem">
+            <End Role="Playlist" EntitySet="Playlist" />
+            <End Role="Playlistitem" EntitySet="Playlistitem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlaylistItem_Title" Association="YAM_StorageModel.Store.FK_PlaylistItem_Title">
+            <End Role="Title" EntitySet="Title" />
+            <End Role="Playlistitem" EntitySet="Playlistitem" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Titelartist_Title" Association="YAM_StorageModel.Store.FK_Titelartist_Title">
+            <End Role="Title" EntitySet="Title" />
+            <End Role="Titleartist" EntitySet="Titleartist" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Title_Albumtitle" Association="YAM_StorageModel.Store.FK_Title_Albumtitle">
+            <End Role="Title" EntitySet="Title" />
+            <End Role="Albumtitle" EntitySet="Albumtitle" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Title_Genre" Association="YAM_StorageModel.Store.FK_Title_Genre">
+            <End Role="Genre" EntitySet="Genre" />
+            <End Role="Title" EntitySet="Title" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Title_Lang" Association="YAM_StorageModel.Store.FK_Title_Lang">
+            <End Role="Lang" EntitySet="Lang" />
+            <End Role="Title" EntitySet="Title" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Titleartist_Artist" Association="YAM_StorageModel.Store.FK_Titleartist_Artist">
+            <End Role="Artist" EntitySet="Artist" />
+            <End Role="Titleartist" EntitySet="Titleartist" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Album">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Albumname" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Releaseyear" Type="int" />
+          <Property Name="Coverpath" Type="nvarchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Albumtitle">
+          <Key>
+            <PropertyRef Name="AlbumId" />
+            <PropertyRef Name="TitleId" />
+          </Key>
+          <Property Name="AlbumId" Type="int" Nullable="false" />
+          <Property Name="TitleId" Type="int" Nullable="false" />
+          <Property Name="Titlenumber" Type="int" />
+        </EntityType>
+        <EntityType Name="Artist">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Artistname" Type="nvarchar" Nullable="false" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Genre">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Genrename" Type="nvarchar" Nullable="false" MaxLength="32" />
+          <Property Name="Description" Type="ntext" />
+        </EntityType>
+        <EntityType Name="Lang">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Langname" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Langcode" Type="nvarchar" Nullable="false" MaxLength="3" />
+        </EntityType>
+        <EntityType Name="Lastsearch">
+          <Key>
+            <PropertyRef Name="SearchTerm" />
+          </Key>
+          <Property Name="SearchTerm" Type="nvarchar" Nullable="false" MaxLength="128" />
+          <Property Name="SearchDate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Playlist">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Playlistname" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Lastplayed" Type="datetime" />
+          <Property Name="Playcounter" Type="int" />
+        </EntityType>
+        <EntityType Name="Playlistitem">
+          <Key>
+            <PropertyRef Name="PlaylistId" />
+            <PropertyRef Name="TitleId" />
+          </Key>
+          <Property Name="PlaylistId" Type="int" Nullable="false" />
+          <Property Name="TitleId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Title">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+          <Property Name="Titlename" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Genre" Type="int" />
+          <Property Name="Bitrate" Type="int" />
+          <Property Name="Releaseyear" Type="int" />
+          <Property Name="Playtime" Type="bigint" Nullable="false" />
+          <Property Name="Lang" Type="int" />
+          <Property Name="Filepath" Type="nvarchar" Nullable="false" MaxLength="255" />
+          <Property Name="Lastplayed" Type="datetime" />
+          <Property Name="Playcounter" Type="int" />
+        </EntityType>
+        <EntityType Name="Titleartist">
+          <Key>
+            <PropertyRef Name="ArtistId" />
+            <PropertyRef Name="TitleId" />
+          </Key>
+          <Property Name="ArtistId" Type="int" Nullable="false" />
+          <Property Name="TitleId" Type="int" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Album_Albumtitle">
+          <End Role="Album" Type="YAM_StorageModel.Store.Album" Multiplicity="1" />
+          <End Role="Albumtitle" Type="YAM_StorageModel.Store.Albumtitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Album">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Albumtitle">
+              <PropertyRef Name="AlbumId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Playlist_PlaylistItem">
+          <End Role="Playlist" Type="YAM_StorageModel.Store.Playlist" Multiplicity="1" />
+          <End Role="Playlistitem" Type="YAM_StorageModel.Store.Playlistitem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Playlist">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Playlistitem">
+              <PropertyRef Name="PlaylistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlaylistItem_Title">
+          <End Role="Title" Type="YAM_StorageModel.Store.Title" Multiplicity="1" />
+          <End Role="Playlistitem" Type="YAM_StorageModel.Store.Playlistitem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Title">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Playlistitem">
+              <PropertyRef Name="PlaylistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Titelartist_Title">
+          <End Role="Title" Type="YAM_StorageModel.Store.Title" Multiplicity="1" />
+          <End Role="Titleartist" Type="YAM_StorageModel.Store.Titleartist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Title">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Titleartist">
+              <PropertyRef Name="TitleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Title_Albumtitle">
+          <End Role="Title" Type="YAM_StorageModel.Store.Title" Multiplicity="1" />
+          <End Role="Albumtitle" Type="YAM_StorageModel.Store.Albumtitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Title">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Albumtitle">
+              <PropertyRef Name="TitleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Title_Genre">
+          <End Role="Genre" Type="YAM_StorageModel.Store.Genre" Multiplicity="0..1" />
+          <End Role="Title" Type="YAM_StorageModel.Store.Title" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genre">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Title">
+              <PropertyRef Name="Genre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Title_Lang">
+          <End Role="Lang" Type="YAM_StorageModel.Store.Lang" Multiplicity="0..1" />
+          <End Role="Title" Type="YAM_StorageModel.Store.Title" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lang">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Title">
+              <PropertyRef Name="Lang" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Titleartist_Artist">
+          <End Role="Artist" Type="YAM_StorageModel.Store.Artist" Multiplicity="1" />
+          <End Role="Titleartist" Type="YAM_StorageModel.Store.Titleartist" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Artist">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Titleartist">
+              <PropertyRef Name="ArtistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="YAM_StorageModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="YAM_StorageEntities" p1:LazyLoadingEnabled="true">
+          <EntitySet Name="Albums" EntityType="YAM_StorageModel.Album" />
+          <EntitySet Name="Albumtitles" EntityType="YAM_StorageModel.Albumtitle" />
+          <EntitySet Name="Artists" EntityType="YAM_StorageModel.Artist" />
+          <EntitySet Name="Genres" EntityType="YAM_StorageModel.Genre" />
+          <EntitySet Name="Langs" EntityType="YAM_StorageModel.Lang" />
+          <EntitySet Name="Lastsearches" EntityType="YAM_StorageModel.Lastsearch" />
+          <EntitySet Name="Playlists" EntityType="YAM_StorageModel.Playlist" />
+          <EntitySet Name="Playlistitems" EntityType="YAM_StorageModel.Playlistitem" />
+          <EntitySet Name="Titles" EntityType="YAM_StorageModel.Title" />
+          <AssociationSet Name="FK_Album_Albumtitle" Association="YAM_StorageModel.FK_Album_Albumtitle">
+            <End Role="Album" EntitySet="Albums" />
+            <End Role="Albumtitle" EntitySet="Albumtitles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Title_Albumtitle" Association="YAM_StorageModel.FK_Title_Albumtitle">
+            <End Role="Title" EntitySet="Titles" />
+            <End Role="Albumtitle" EntitySet="Albumtitles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Title_Genre" Association="YAM_StorageModel.FK_Title_Genre">
+            <End Role="Genre" EntitySet="Genres" />
+            <End Role="Title" EntitySet="Titles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Title_Lang" Association="YAM_StorageModel.FK_Title_Lang">
+            <End Role="Lang" EntitySet="Langs" />
+            <End Role="Title" EntitySet="Titles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Playlist_PlaylistItem" Association="YAM_StorageModel.FK_Playlist_PlaylistItem">
+            <End Role="Playlist" EntitySet="Playlists" />
+            <End Role="Playlistitem" EntitySet="Playlistitems" />
+          </AssociationSet>
+          <AssociationSet Name="FK_PlaylistItem_Title" Association="YAM_StorageModel.FK_PlaylistItem_Title">
+            <End Role="Title" EntitySet="Titles" />
+            <End Role="Playlistitem" EntitySet="Playlistitems" />
+          </AssociationSet>
+          <AssociationSet Name="Titleartist" Association="YAM_StorageModel.Titleartist">
+            <End Role="Title" EntitySet="Titles" />
+            <End Role="Artist" EntitySet="Artists" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Album">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Albumname" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Releaseyear" Type="Int32" />
+          <Property Name="Coverpath" Type="String" MaxLength="255" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Albumtitles" Relationship="YAM_StorageModel.FK_Album_Albumtitle" FromRole="Album" ToRole="Albumtitle" />
+        </EntityType>
+        <EntityType Name="Albumtitle">
+          <Key>
+            <PropertyRef Name="AlbumId" />
+            <PropertyRef Name="TitleId" />
+          </Key>
+          <Property Name="AlbumId" Type="Int32" Nullable="false" />
+          <Property Name="TitleId" Type="Int32" Nullable="false" />
+          <Property Name="Titlenumber" Type="Int32" />
+          <NavigationProperty Name="Album" Relationship="YAM_StorageModel.FK_Album_Albumtitle" FromRole="Albumtitle" ToRole="Album" />
+          <NavigationProperty Name="Title" Relationship="YAM_StorageModel.FK_Title_Albumtitle" FromRole="Albumtitle" ToRole="Title" />
+        </EntityType>
+        <EntityType Name="Artist">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Artistname" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Titles" Relationship="YAM_StorageModel.Titleartist" FromRole="Artist" ToRole="Title" />
+        </EntityType>
+        <EntityType Name="Genre">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Genrename" Type="String" Nullable="false" MaxLength="32" Unicode="true" FixedLength="false" />
+          <Property Name="Description" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Titles" Relationship="YAM_StorageModel.FK_Title_Genre" FromRole="Genre" ToRole="Title" />
+        </EntityType>
+        <EntityType Name="Lang">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Langname" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Langcode" Type="String" Nullable="false" MaxLength="3" Unicode="true" FixedLength="false" />
+          <NavigationProperty Name="Titles" Relationship="YAM_StorageModel.FK_Title_Lang" FromRole="Lang" ToRole="Title" />
+        </EntityType>
+        <EntityType Name="Lastsearch">
+          <Key>
+            <PropertyRef Name="SearchTerm" />
+          </Key>
+          <Property Name="SearchTerm" Type="String" Nullable="false" MaxLength="128" Unicode="true" FixedLength="false" />
+          <Property Name="SearchDate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Playlist">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Playlistname" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Lastplayed" Type="DateTime" Precision="3" />
+          <Property Name="Playcounter" Type="Int32" />
+          <NavigationProperty Name="Playlistitems" Relationship="YAM_StorageModel.FK_Playlist_PlaylistItem" FromRole="Playlist" ToRole="Playlistitem" />
+        </EntityType>
+        <EntityType Name="Playlistitem">
+          <Key>
+            <PropertyRef Name="PlaylistId" />
+            <PropertyRef Name="TitleId" />
+          </Key>
+          <Property Name="PlaylistId" Type="Int32" Nullable="false" />
+          <Property Name="TitleId" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="Playlist" Relationship="YAM_StorageModel.FK_Playlist_PlaylistItem" FromRole="Playlistitem" ToRole="Playlist" />
+          <NavigationProperty Name="Title" Relationship="YAM_StorageModel.FK_PlaylistItem_Title" FromRole="Playlistitem" ToRole="Title" />
+        </EntityType>
+        <EntityType Name="Title">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" p1:StoreGeneratedPattern="Identity" />
+          <Property Name="Titlename" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Genre" Type="Int32" />
+          <Property Name="Bitrate" Type="Int32" />
+          <Property Name="Releaseyear" Type="Int32" />
+          <Property Name="Playtime" Type="Int64" Nullable="false" />
+          <Property Name="Lang" Type="Int32" />
+          <Property Name="Filepath" Type="String" Nullable="false" MaxLength="255" Unicode="true" FixedLength="false" />
+          <Property Name="Lastplayed" Type="DateTime" Precision="3" />
+          <Property Name="Playcounter" Type="Int32" />
+          <NavigationProperty Name="Albumtitles" Relationship="YAM_StorageModel.FK_Title_Albumtitle" FromRole="Title" ToRole="Albumtitle" />
+          <NavigationProperty Name="Genre1" Relationship="YAM_StorageModel.FK_Title_Genre" FromRole="Title" ToRole="Genre" />
+          <NavigationProperty Name="Lang1" Relationship="YAM_StorageModel.FK_Title_Lang" FromRole="Title" ToRole="Lang" />
+          <NavigationProperty Name="Playlistitems" Relationship="YAM_StorageModel.FK_PlaylistItem_Title" FromRole="Title" ToRole="Playlistitem" />
+          <NavigationProperty Name="Artists" Relationship="YAM_StorageModel.Titleartist" FromRole="Title" ToRole="Artist" />
+        </EntityType>
+        <Association Name="FK_Album_Albumtitle">
+          <End Role="Album" Type="YAM_StorageModel.Album" Multiplicity="1" />
+          <End Role="Albumtitle" Type="YAM_StorageModel.Albumtitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Album">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Albumtitle">
+              <PropertyRef Name="AlbumId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Title_Albumtitle">
+          <End Role="Title" Type="YAM_StorageModel.Title" Multiplicity="1" />
+          <End Role="Albumtitle" Type="YAM_StorageModel.Albumtitle" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Title">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Albumtitle">
+              <PropertyRef Name="TitleId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Title_Genre">
+          <End Role="Genre" Type="YAM_StorageModel.Genre" Multiplicity="0..1" />
+          <End Role="Title" Type="YAM_StorageModel.Title" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Genre">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Title">
+              <PropertyRef Name="Genre" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Title_Lang">
+          <End Role="Lang" Type="YAM_StorageModel.Lang" Multiplicity="0..1" />
+          <End Role="Title" Type="YAM_StorageModel.Title" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Lang">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Title">
+              <PropertyRef Name="Lang" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Playlist_PlaylistItem">
+          <End Role="Playlist" Type="YAM_StorageModel.Playlist" Multiplicity="1" />
+          <End Role="Playlistitem" Type="YAM_StorageModel.Playlistitem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Playlist">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Playlistitem">
+              <PropertyRef Name="PlaylistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_PlaylistItem_Title">
+          <End Role="Title" Type="YAM_StorageModel.Title" Multiplicity="1" />
+          <End Role="Playlistitem" Type="YAM_StorageModel.Playlistitem" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Title">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Playlistitem">
+              <PropertyRef Name="PlaylistId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Titleartist">
+          <End Role="Title" Type="YAM_StorageModel.Title" Multiplicity="*" />
+          <End Role="Artist" Type="YAM_StorageModel.Artist" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="YAM_StorageModelStoreContainer" CdmEntityContainer="YAM_StorageEntities">
+          <EntitySetMapping Name="Albums">
+            <EntityTypeMapping TypeName="YAM_StorageModel.Album">
+              <MappingFragment StoreEntitySet="Album">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Albumname" ColumnName="Albumname" />
+                <ScalarProperty Name="Releaseyear" ColumnName="Releaseyear" />
+                <ScalarProperty Name="Coverpath" ColumnName="Coverpath" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Albumtitles">
+            <EntityTypeMapping TypeName="YAM_StorageModel.Albumtitle">
+              <MappingFragment StoreEntitySet="Albumtitle">
+                <ScalarProperty Name="AlbumId" ColumnName="AlbumId" />
+                <ScalarProperty Name="TitleId" ColumnName="TitleId" />
+                <ScalarProperty Name="Titlenumber" ColumnName="Titlenumber" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Artists">
+            <EntityTypeMapping TypeName="YAM_StorageModel.Artist">
+              <MappingFragment StoreEntitySet="Artist">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Artistname" ColumnName="Artistname" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Genres">
+            <EntityTypeMapping TypeName="YAM_StorageModel.Genre">
+              <MappingFragment StoreEntitySet="Genre">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Genrename" ColumnName="Genrename" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Langs">
+            <EntityTypeMapping TypeName="YAM_StorageModel.Lang">
+              <MappingFragment StoreEntitySet="Lang">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Langname" ColumnName="Langname" />
+                <ScalarProperty Name="Langcode" ColumnName="Langcode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Lastsearches">
+            <EntityTypeMapping TypeName="YAM_StorageModel.Lastsearch">
+              <MappingFragment StoreEntitySet="Lastsearch">
+                <ScalarProperty Name="SearchTerm" ColumnName="SearchTerm" />
+                <ScalarProperty Name="SearchDate" ColumnName="SearchDate" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Playlists">
+            <EntityTypeMapping TypeName="YAM_StorageModel.Playlist">
+              <MappingFragment StoreEntitySet="Playlist">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Playlistname" ColumnName="Playlistname" />
+                <ScalarProperty Name="Lastplayed" ColumnName="Lastplayed" />
+                <ScalarProperty Name="Playcounter" ColumnName="Playcounter" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Playlistitems">
+            <EntityTypeMapping TypeName="YAM_StorageModel.Playlistitem">
+              <MappingFragment StoreEntitySet="Playlistitem">
+                <ScalarProperty Name="PlaylistId" ColumnName="PlaylistId" />
+                <ScalarProperty Name="TitleId" ColumnName="TitleId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Titles">
+            <EntityTypeMapping TypeName="YAM_StorageModel.Title">
+              <MappingFragment StoreEntitySet="Title">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Titlename" ColumnName="Titlename" />
+                <ScalarProperty Name="Genre" ColumnName="Genre" />
+                <ScalarProperty Name="Bitrate" ColumnName="Bitrate" />
+                <ScalarProperty Name="Releaseyear" ColumnName="Releaseyear" />
+                <ScalarProperty Name="Playtime" ColumnName="Playtime" />
+                <ScalarProperty Name="Lang" ColumnName="Lang" />
+                <ScalarProperty Name="Filepath" ColumnName="Filepath" />
+                <ScalarProperty Name="Lastplayed" ColumnName="Lastplayed" />
+                <ScalarProperty Name="Playcounter" ColumnName="Playcounter" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Titleartist" TypeName="YAM_StorageModel.Titleartist" StoreEntitySet="Titleartist">
+            <EndProperty Name="Title">
+              <ScalarProperty Name="Id" ColumnName="TitleId" />
+            </EndProperty>
+            <EndProperty Name="Artist">
+              <ScalarProperty Name="Id" ColumnName="ArtistId" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

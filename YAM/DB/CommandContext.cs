@@ -60,9 +60,9 @@ namespace YAM
                     Title newMp3Entry = MP3TagReader.GetMP3Title(db, file);
 
                     if (newMp3Entry != null)
-                    //{
+                        //{
                         db.Titles.Add(newMp3Entry);
-                        //GlobalMusic.Add(newMp3Entry);
+                    //GlobalMusic.Add(newMp3Entry);
                     //}
 
                     db.SaveChanges();
@@ -81,8 +81,32 @@ namespace YAM
 
                 foreach (var song in musicDeleteList)
                 {
-                    var currentAlbumId = song.Albumtitles.First().AlbumId;
-                    var currentArtistId = song.Artists.First().Id;
+                    #region CurrentAlbum
+
+                    Nullable<Int32> currentAlbumId = null;
+
+                    if (song.Albumtitles != null && song.Albumtitles.Any())
+                    {
+                        var currentAlbum = song.Albumtitles.FirstOrDefault();
+
+                        if (currentAlbum != null)
+                            currentAlbumId = currentAlbum.AlbumId;
+                    }
+
+                    #endregion
+
+                    #region CurrentArtist
+
+                    Nullable<Int32> currentArtistId = null;
+
+                    if (song.Artists != null && song.Artists.Any())
+                    {
+                        var currentArtist = song.Artists.FirstOrDefault();
+
+                        if (currentArtist != null)
+                            currentArtistId = currentArtist.Id;
+                    }
+                    #endregion
 
                     //Genre löschen
                     var IsGenreExist = GlobalMusic.Where(g => g.Id != song.Id).Any(g => g.Genre == song.Genre);
@@ -92,31 +116,35 @@ namespace YAM
 
                     //Lied aus DB löschen
                     db.Titles.Remove(song);
-                    
+
                     //Album löschen
-                    var IsAlbumExists = GlobalMusic.Where(t => t.Id != song.Id).Any(t => t.Albumtitles.Any(a => a.AlbumId == currentAlbumId));
-
-                    if (!IsAlbumExists)
+                    if (currentAlbumId.HasValue)
                     {
-                        var album = db.Albums.FirstOrDefault(a => a.Id == currentAlbumId);
-                        db.Albums.Remove(album);
+                        var IsAlbumExists = db.Albums.Where(t => t.Id != song.Id).Any(t => t.Albumtitles.Any(a => a.AlbumId == currentAlbumId));
+
+                        if (!IsAlbumExists)
+                        {
+                            var album = db.Albums.FirstOrDefault(a => a.Id == currentAlbumId);
+                            db.Albums.Remove(album);
+                        }
+
+                        var albumtitle = db.Albumtitles.FirstOrDefault(a => a.AlbumId == currentAlbumId);
+
+                        if (albumtitle != null && !IsAlbumExists)
+                            db.Albumtitles.Remove(albumtitle);
                     }
-
-                    var albumtitle = db.Albumtitles.FirstOrDefault(a => a.AlbumId == currentAlbumId);
-
-                    if (albumtitle != null && !IsAlbumExists)
-                        db.Albumtitles.Remove(albumtitle);
 
                     //Künstler löschen
-                    var IsArtistExist = GlobalMusic.Where(t => t.Id != song.Id).Any(t => t.Artists.Any(a => a.Id == currentArtistId));
-
-                    if (!IsArtistExist)
+                    if (currentArtistId.HasValue)
                     {
-                        var artist = db.Artists.FirstOrDefault(a => a.Id == currentArtistId);
-                        db.Artists.Remove(artist);
+                        var IsArtistExist = db.Titles.Where(t => t.Id != song.Id).Any(t => t.Artists.Any(a => a.Id == currentArtistId));
+
+                        if (!IsArtistExist)
+                        {
+                            var artist = db.Artists.FirstOrDefault(a => a.Id == currentArtistId);
+                            db.Artists.Remove(artist);
+                        }
                     }
-                    
-                    //GlobalMusic.Remove(song);
                 }
 
                 db.SaveChanges();

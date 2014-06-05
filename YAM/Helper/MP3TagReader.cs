@@ -12,14 +12,20 @@ namespace YAM
             return db.Titles.Any(t => t.Filepath.CompareTo(filePath) == 0);
         }
 
+        public static String GetFileName(String filename)
+        {
+            return filename.Substring(0, filename.IndexOf("."));
+        }
+
         public static Title GetMP3Title(YAM_StorageEntities db, String filepath)
         {
             TagLib.File file = null;
             Title metaTag = null;
+            System.IO.FileInfo file_info = null;
 
             try
             {
-                System.IO.FileInfo file_info = new System.IO.FileInfo(filepath);
+                file_info = new System.IO.FileInfo(filepath);
             }
             catch
             {
@@ -37,17 +43,21 @@ namespace YAM
             }
 
             //Album auslesen bzw. anlegen
-            var album = db.Albums.FirstOrDefault(a => a.Albumname == file.Tag.Album);
-
-            if (album == null)
+            Album album = null;
+            if (!String.IsNullOrEmpty(file.Tag.Album))
             {
-                album = new Album()
-                {
-                    Albumname = file.Tag.Album,
-                    Releaseyear = (int)file.Tag.Year
-                };
+                album = db.Albums.FirstOrDefault(a => a.Albumname == file.Tag.Album);
 
-                db.Albums.Add(album);
+                if (album == null)
+                {
+                    album = new Album()
+                    {
+                        Albumname = file.Tag.Album,
+                        Releaseyear = (int)file.Tag.Year
+                    };
+
+                    db.Albums.Add(album);
+                }
             }
 
             if (IsTitleExists(db, filepath))
@@ -59,7 +69,7 @@ namespace YAM
             metaTag.Filepath = filepath;
             metaTag.Playtime = file.Properties.Duration.Ticks;
             metaTag.Releaseyear = (int)file.Tag.Year;
-            metaTag.Titlename = file.Tag.Title;
+            metaTag.Titlename = String.IsNullOrEmpty(file.Tag.Title) ? GetFileName(file_info.Name) : file.Tag.Title;
 
             var acodec = file.Properties.Codecs as TagLib.IAudioCodec;
 
@@ -67,27 +77,37 @@ namespace YAM
                 metaTag.Bitrate = acodec.AudioBitrate;
 
             //Lied zum Album zuordnen
-            db.Albumtitles.Add(new Albumtitle()
+            if (!String.IsNullOrEmpty(file.Tag.Album))
             {
-                Album = album,
-                Title = metaTag,
-                Titlenumber = (int)file.Tag.Track
-            });
+                db.Albumtitles.Add(new Albumtitle()
+                {
+                    Album = album,
+                    Title = metaTag,
+                    Titlenumber = (int)file.Tag.Track
+                });
+            }
 
-            var genre = db.Genres.FirstOrDefault(g => g.Genrename.CompareTo(file.Tag.FirstGenre) == 0);
+            if (!String.IsNullOrEmpty(file.Tag.FirstGenre))
+            {
+                var genre = db.Genres.FirstOrDefault(g => g.Genrename.CompareTo(file.Tag.FirstGenre) == 0);
 
-            if (genre == null)
-                metaTag.Genre1 = new Genre() { Genrename = file.Tag.FirstGenre };
+                if (genre == null)
+                    metaTag.Genre1 = new Genre() { Genrename = file.Tag.FirstGenre };
+                else
+                    metaTag.Genre = genre.Id;
+            }
+
+            if (!String.IsNullOrEmpty(file.Tag.FirstPerformer))
+            {
+                var artist = db.Artists.Where(a => a.Artistname.CompareTo(file.Tag.FirstPerformer) == 0);
+
+                if (!artist.Any())
+                    metaTag.Artists.Add(new Artist() { Artistname = file.Tag.FirstPerformer });
+                else
+                    metaTag.Artists = artist.ToList();
+            }
             else
-                metaTag.Genre = genre.Id;
-
-            var artist = db.Artists.Where(a => a.Artistname.CompareTo(file.Tag.FirstPerformer) == 0);
-
-            if (!artist.Any())
-                metaTag.Artists.Add(new Artist() { Artistname = file.Tag.FirstPerformer });
-            else
-                metaTag.Artists = artist.ToList();
-
+                metaTag.Artists = null;
 
             //Write("Grouping", file.Tag.Grouping);
             //Write("Title", file.Tag.Title);

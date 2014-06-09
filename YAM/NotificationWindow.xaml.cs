@@ -3,11 +3,11 @@
 namespace YAM
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for NotificationWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window
+    public partial class NotificationWindow : Window
     {
-        public MainWindow()
+        public NotificationWindow()
         {
             InitializeComponent();
         }

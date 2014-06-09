@@ -41,6 +41,13 @@ namespace YAM
             OnPropertyChanged("SelectedGlobalMusic");
         }
 
+        private void UpdatePlaylistMusicCollection()
+        {
+            OnPropertyChanged("PlaylistMusic");
+            OnPropertyChanged("PlaylistMusicCount");
+            OnPropertyChanged("PlaylistPlayTime");
+        }
+
         #endregion
     }
 }

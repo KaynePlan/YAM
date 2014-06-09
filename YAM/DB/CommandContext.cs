@@ -12,6 +12,8 @@ namespace YAM
 
         private Command _ImportSong;
         private Command _DeleteSongMain;
+        private Command _AddToPlaylist;
+        private Command _RemoveFromPlaylist;
 
         #endregion
 
@@ -20,21 +22,21 @@ namespace YAM
 
         public Command ImportSong { get { return _ImportSong ?? (_ImportSong = new Command(ImportSong_Executed, ImportSong_CanExecute)); } }
         public Command DeleteSongMain { get { return _DeleteSongMain ?? (_DeleteSongMain = new Command(DeleteSongMain_Executed, DeleteSongMain_CanExecute)); } }
+        public Command AddToPlaylist { get { return _AddToPlaylist ?? (_AddToPlaylist = new Command(AddToPlaylist_Executed, AddToPlaylist_CanExecute)); } }
+        public Command RemoveFromPlaylist { get { return _RemoveFromPlaylist ?? (_RemoveFromPlaylist = new Command(RemoveFromPlaylist_Executed, RemoveFromPlaylist_CanExecute)); } }
 
         #endregion
 
         //CanExecute Methoden für die Button Commands
         #region Commands CanExecute
 
-        private bool ImportSong_CanExecute(object arg)
-        {
-            return true;
-        }
+        private bool ImportSong_CanExecute(object arg) { return true; }
 
-        private bool DeleteSongMain_CanExecute(object arg)
-        {
-            return SelectedGlobalMusic.Any();
-        }
+        private bool DeleteSongMain_CanExecute(object arg) { return SelectedGlobalMusic.Any(); }
+
+        private bool AddToPlaylist_CanExecute(object arg) { return SelectedGlobalMusic.Any(); }
+
+        private bool RemoveFromPlaylist_CanExecute(object arg) { return SelectedPlaylistMusic.Any(); }
 
         #endregion
 
@@ -55,32 +57,44 @@ namespace YAM
             {
                 String[] filename = dlg.FileNames;
 
+                var importWindow = InitiateWindow(Templates["Import"], filename.Count());
+                importWindow.Show();
+
                 foreach (String file in filename)
                 {
                     Title newMp3Entry = MP3TagReader.GetMP3Title(db, file);
 
                     if (newMp3Entry != null)
-                        //{
+                    {
+                        UpdateWindow(importWindow);
                         db.Titles.Add(newMp3Entry);
-                    //GlobalMusic.Add(newMp3Entry);
-                    //}
+                    }
 
                     db.SaveChanges();
                 }
 
                 UpdateGlobalMusicCollection();
+
+                CloseWindow(importWindow);
             }
         }
 
         private void DeleteSongMain_Executed(object obj)
         {
-            if (MessageBox.Show("Wollen Sie die ausgewählten Lieder, wirklich aus der Datenbank entfernen?", "Sicher?",
+            int delcount = SelectedGlobalMusic.Count();
+
+            if (MessageBox.Show("Wollen Sie die (" + delcount + ") ausgewählten Lieder, wirklich aus der Datenbank entfernen?", "Sicher?",
                  MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.No) == MessageBoxResult.Yes)
             {
                 var musicDeleteList = new List<Title>(SelectedGlobalMusic);
 
+                var deleteWindow = InitiateWindow(Templates["Delete"], musicDeleteList.Count());
+                deleteWindow.Show();
+
                 foreach (var song in musicDeleteList)
                 {
+                    UpdateWindow(deleteWindow);
+
                     #region CurrentAlbum
 
                     Nullable<Int32> currentAlbumId = null;
@@ -106,6 +120,7 @@ namespace YAM
                         if (currentArtist != null)
                             currentArtistId = currentArtist.Id;
                     }
+
                     #endregion
 
                     //Genre löschen
@@ -120,17 +135,19 @@ namespace YAM
                     //Album löschen
                     if (currentAlbumId.HasValue)
                     {
-                        var IsAlbumExists = db.Albums.Where(t => t.Id != song.Id).Any(t => t.Albumtitles.Any(a => a.AlbumId == currentAlbumId));
+                        var IsAlbumExists = db.Titles.Where(t => t.Id != song.Id).Any(t => t.Albumtitles.Any(a => a.AlbumId == currentAlbumId));
 
                         if (!IsAlbumExists)
                         {
                             var album = db.Albums.FirstOrDefault(a => a.Id == currentAlbumId);
-                            db.Albums.Remove(album);
+
+                            if (album != null)
+                                db.Albums.Remove(album);
                         }
 
                         var albumtitle = db.Albumtitles.FirstOrDefault(a => a.AlbumId == currentAlbumId);
 
-                        if (albumtitle != null && !IsAlbumExists)
+                        if (albumtitle != null)
                             db.Albumtitles.Remove(albumtitle);
                     }
 
@@ -145,13 +162,66 @@ namespace YAM
                             db.Artists.Remove(artist);
                         }
                     }
+
+                    db.SaveChanges();
                 }
 
                 db.SaveChanges();
-
                 UpdateGlobalMusicCollection();
+
+                CloseWindow(deleteWindow);
             }
         }
+
+        private void AddToPlaylist_Executed(object obj)
+        {
+            foreach (var song in SelectedGlobalMusic)
+                if (!PlaylistMusic.Any(s => s.Id == song.Id))
+                    this.PlaylistMusic.Add(song);
+
+            UpdatePlaylistMusicCollection();
+        }
+
+        private void RemoveFromPlaylist_Executed(object obj)
+        {
+            var selecteditems = new List<Title>(SelectedPlaylistMusic);
+
+            foreach (var song in selecteditems)
+                if (PlaylistMusic.Any(s => s.Id == song.Id))
+                    this.PlaylistMusic.Remove(song);
+
+            UpdatePlaylistMusicCollection();
+        }
+
         #endregion
+
+        private NotificationWindow InitiateWindow(String template, Int32 maxSongs)
+        {
+            var window = new NotificationWindow();
+            window.Owner = App.Current.MainWindow;
+            window.DataContext = this;
+
+            NotificationCurrentSongCount = 0;
+            NotificationMaxSongCount = maxSongs;
+            NotificationTemplate = template;
+
+            OnPropertyChanged("Notification");
+
+            return window;
+        }
+
+        private void UpdateWindow(NotificationWindow window)
+        {
+            NotificationCurrentSongCount++;
+            OnPropertyChanged("Notification");
+            window.Refresh();
+        }
+
+        private void CloseWindow(NotificationWindow window)
+        {
+            window.Close();
+            NotificationCurrentSongCount = 0;
+            NotificationMaxSongCount = 0;
+        }
     }
 }

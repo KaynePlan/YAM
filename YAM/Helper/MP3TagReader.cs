@@ -14,7 +14,7 @@ namespace YAM
 
         public static String GetFileName(String filename)
         {
-            return filename.Substring(0, filename.IndexOf("."));
+            return filename.Substring(0, filename.LastIndexOf("."));
         }
 
         public static Title GetMP3Title(YAM_StorageEntities db, String filepath)
@@ -70,6 +70,7 @@ namespace YAM
             metaTag.Playtime = file.Properties.Duration.Ticks;
             metaTag.Releaseyear = (int)file.Tag.Year;
             metaTag.Titlename = String.IsNullOrEmpty(file.Tag.Title) ? GetFileName(file_info.Name) : file.Tag.Title;
+            metaTag.Playcounter = 0;
 
             var acodec = file.Properties.Codecs as TagLib.IAudioCodec;
 

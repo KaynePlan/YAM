@@ -88,6 +88,14 @@
     <Compile Include="Genre.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Helper\UIRefresh.cs" />
+    <Compile Include="MainWindow.xaml.cs">
+      <SubType>Code</SubType>
+      <DependentUpon>MainWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="NotificationWindow.xaml.cs">
+      <DependentUpon>NotificationWindow.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Lang.cs">
       <DependentUpon>DataModel.tt</DependentUpon>
     </Compile>
@@ -125,7 +133,6 @@
     <Compile Include="Helper\Command.cs" />
     <Compile Include="Helper\Converter.cs" />
     <Compile Include="Helper\MP3TagReader.cs" />
-    <Compile Include="MainWindow.xaml.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -172,8 +179,12 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="MainWindow.xaml">
-      <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="NotificationWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
@@ -188,7 +199,7 @@
     <Resource Include="Images\HP-Recycle-Full-Dock.png" />
     <Resource Include="Images\rammstein-made-in-germany-album-cover.jpg" />
     <Content Include="YAM_Storage.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>

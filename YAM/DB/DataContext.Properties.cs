@@ -24,6 +24,10 @@ namespace YAM
             }
         }
 
+        private String NotificationTemplate { get; set; }
+        private Int32 NotificationCurrentSongCount { get; set; }
+        private Int32 NotificationMaxSongCount { get; set; }
+
         #endregion
     }
 }

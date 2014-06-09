@@ -16,11 +16,11 @@ namespace YAM
 
             try
             {
-                return (value as HashSet<Artist>).First().Artistname;
+                return (value as HashSet<Artist>).First().Artistname + " - ";
             }
             catch (ArgumentNullException)
             {
-                return (value as List<Artist>).First().Artistname;
+                return (value as List<Artist>).First().Artistname + " - ";
             }
             catch
             {

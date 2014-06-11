@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Objects;
 using System.Linq;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -11,21 +10,27 @@ namespace YAM
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            if (value == null)
+            if ((value as HashSet<Artist>) != null)
+                return (value as HashSet<Artist>).First().Artistname + " - ";
+            
+            else if ((value as List<Artist>) != null)
+                return (value as List<Artist>).First().Artistname + " - ";
+            
+            else
                 return string.Empty;
 
-            try
-            {
-                return (value as HashSet<Artist>).First().Artistname + " - ";
-            }
-            catch (ArgumentNullException)
-            {
-                return (value as List<Artist>).First().Artistname + " - ";
-            }
-            catch
-            {
-                return "Converter Error";
-            }
+            //try
+            //{
+            //    return (value as HashSet<Artist>).First().Artistname + " - ";
+            //}
+            //catch (ArgumentNullException)
+            //{
+            //    return (value as List<Artist>).First().Artistname + " - ";
+            //}
+            //catch
+            //{
+            //    return string.Empty;
+            //}
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

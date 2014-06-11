@@ -1,13 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace YAM
 {
-    public partial class Title
+    public partial class Title : ICloneable
     {
         public Boolean IsSelected { get; set; }
+
+        object ICloneable.Clone()
+        {
+            return this.Clone();
+        }
+
+        public Title Clone()
+        {
+            return (Title)this.MemberwiseClone();
+        }
     }
 }

@@ -14,6 +14,7 @@ namespace YAM
         private Command _DeleteSongMain;
         private Command _AddToPlaylist;
         private Command _RemoveFromPlaylist;
+        private Command _ClearPlaylist;
 
         #endregion
 
@@ -24,6 +25,7 @@ namespace YAM
         public Command DeleteSongMain { get { return _DeleteSongMain ?? (_DeleteSongMain = new Command(DeleteSongMain_Executed, DeleteSongMain_CanExecute)); } }
         public Command AddToPlaylist { get { return _AddToPlaylist ?? (_AddToPlaylist = new Command(AddToPlaylist_Executed, AddToPlaylist_CanExecute)); } }
         public Command RemoveFromPlaylist { get { return _RemoveFromPlaylist ?? (_RemoveFromPlaylist = new Command(RemoveFromPlaylist_Executed, RemoveFromPlaylist_CanExecute)); } }
+        public Command ClearPlaylist { get { return _ClearPlaylist ?? (_ClearPlaylist = new Command(ClearPlaylist_Executed, ClearPlaylist_CanExecute)); } }
 
         #endregion
 
@@ -31,12 +33,10 @@ namespace YAM
         #region Commands CanExecute
 
         private bool ImportSong_CanExecute(object arg) { return true; }
-
         private bool DeleteSongMain_CanExecute(object arg) { return SelectedGlobalMusic.Any(); }
-
         private bool AddToPlaylist_CanExecute(object arg) { return SelectedGlobalMusic.Any(); }
-
         private bool RemoveFromPlaylist_CanExecute(object arg) { return SelectedPlaylistMusic.Any(); }
+        private bool ClearPlaylist_CanExecute(object arg) { return PlaylistMusic.Any(); }
 
         #endregion
 
@@ -175,20 +175,29 @@ namespace YAM
 
         private void AddToPlaylist_Executed(object obj)
         {
+            //var selecteditems = SelectedGlobalMusic.ToList<Title>();
+
             foreach (var song in SelectedGlobalMusic)
                 if (!PlaylistMusic.Any(s => s.Id == song.Id))
-                    this.PlaylistMusic.Add(song);
+                    this.PlaylistMusic.Add(song);//.Clone());
 
             UpdatePlaylistMusicCollection();
         }
 
         private void RemoveFromPlaylist_Executed(object obj)
         {
-            var selecteditems = new List<Title>(SelectedPlaylistMusic);
+            var selecteditems = SelectedPlaylistMusic.ToList();
 
             foreach (var song in selecteditems)
                 if (PlaylistMusic.Any(s => s.Id == song.Id))
                     this.PlaylistMusic.Remove(song);
+
+            UpdatePlaylistMusicCollection();
+        }
+
+        private void ClearPlaylist_Executed(object obj)
+        {
+            PlaylistMusic.Clear();
 
             UpdatePlaylistMusicCollection();
         }

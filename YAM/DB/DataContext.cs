@@ -22,7 +22,10 @@ namespace YAM
                 try
                 {
                     db.SaveChanges();
+
                     OnPropertyChanged("db");
+                    UpdateGlobalMusicCollection();
+                    UpdatePlaylistMusicCollection();
                 }
                 catch (Exception ex)
                 {
@@ -43,6 +46,16 @@ namespace YAM
 
         private void UpdatePlaylistMusicCollection()
         {
+            //Workaround für die automatische Nummerierung der Liste
+            var oldList = _PlaylistMusic;
+            _PlaylistMusic = null;
+
+            OnPropertyChanged("PlaylistMusic");
+            OnPropertyChanged("PlaylistMusicCount");
+            OnPropertyChanged("PlaylistPlayTime");
+
+            _PlaylistMusic = oldList;
+
             OnPropertyChanged("PlaylistMusic");
             OnPropertyChanged("PlaylistMusicCount");
             OnPropertyChanged("PlaylistPlayTime");

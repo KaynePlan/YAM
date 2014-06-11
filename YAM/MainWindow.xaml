@@ -15,7 +15,6 @@
         <my:ArtistJoinConverter x:Key="artistJoinConverter" />
         <my:PlaytimeConverter x:Key="playtimeConverter" />
         <my:IndexConverter x:Key="IndexConverter" />
-
     </Window.Resources>
 
     <Grid>
@@ -119,7 +118,7 @@
 
                     <Separator />
 
-                    <Button ToolTip="Playliste leeren">
+                    <Button ToolTip="Playliste leeren" Command="{Binding ClearPlaylist}">
                         <Image Source="Images/editdelete-256.png" Width="26" Height="26" />
                     </Button>
 

@@ -6,9 +6,13 @@ namespace YAM
 {
     public partial class DataContext
     {
+        #region Variables
+
         private String _CurrentPlaylistName;
 
-        #region properties
+        #endregion
+
+        #region Properties
 
         public String CurrentPlaylistName
         {

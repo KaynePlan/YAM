@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System.Collections.Generic;
+using System.Windows;
 
 namespace YAM
 {
@@ -7,9 +8,22 @@ namespace YAM
     /// </summary>
     public partial class MainWindow : Window
     {
+        private DataContext dc;
+
         public MainWindow()
         {
             InitializeComponent();
+
+            dc = (YAM.DataContext)this.DataContext;
+
+            dc.ChildPlayer = ucPlayer.GetUserControl();
+
+            ucPlayer.TriggerUpdateTitleEntry += TriggerUpdateTitleEntry;
+        }
+
+        private void TriggerUpdateTitleEntry(YAM_Player.Playlist valueChange)
+        {
+            dc.UpdateTitleEntry(valueChange);
         }
     }
 }

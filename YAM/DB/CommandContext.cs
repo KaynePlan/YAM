@@ -13,6 +13,7 @@ namespace YAM
         private Command _ImportSong;
         private Command _DeleteSongMain;
         private Command _AddToPlaylist;
+        private Command _AddToPlayer;
         private Command _RemoveFromPlaylist;
         private Command _ClearPlaylist;
 
@@ -24,6 +25,7 @@ namespace YAM
         public Command ImportSong { get { return _ImportSong ?? (_ImportSong = new Command(ImportSong_Executed, ImportSong_CanExecute)); } }
         public Command DeleteSongMain { get { return _DeleteSongMain ?? (_DeleteSongMain = new Command(DeleteSongMain_Executed, DeleteSongMain_CanExecute)); } }
         public Command AddToPlaylist { get { return _AddToPlaylist ?? (_AddToPlaylist = new Command(AddToPlaylist_Executed, AddToPlaylist_CanExecute)); } }
+        public Command AddToPlayer { get { return _AddToPlayer ?? (_AddToPlayer = new Command(AddToPlayer_Executed, AddToPlayer_CanExecute)); } }
         public Command RemoveFromPlaylist { get { return _RemoveFromPlaylist ?? (_RemoveFromPlaylist = new Command(RemoveFromPlaylist_Executed, RemoveFromPlaylist_CanExecute)); } }
         public Command ClearPlaylist { get { return _ClearPlaylist ?? (_ClearPlaylist = new Command(ClearPlaylist_Executed, ClearPlaylist_CanExecute)); } }
 
@@ -35,6 +37,7 @@ namespace YAM
         private bool ImportSong_CanExecute(object arg) { return true; }
         private bool DeleteSongMain_CanExecute(object arg) { return SelectedGlobalMusic.Any(); }
         private bool AddToPlaylist_CanExecute(object arg) { return SelectedGlobalMusic.Any(); }
+        private bool AddToPlayer_CanExecute(object arg) { return PlaylistMusic.Any(); }
         private bool RemoveFromPlaylist_CanExecute(object arg) { return SelectedPlaylistMusic.Any(); }
         private bool ClearPlaylist_CanExecute(object arg) { return PlaylistMusic.Any(); }
 
@@ -182,6 +185,11 @@ namespace YAM
                     this.PlaylistMusic.Add(song);//.Clone());
 
             UpdatePlaylistMusicCollection();
+        }
+
+        private void AddToPlayer_Executed(object obj)
+        {
+            ChildPlayer.setPlaylist(ToListEx.TO_YAM_Player_List(this.PlaylistMusic));
         }
 
         private void RemoveFromPlaylist_Executed(object obj)

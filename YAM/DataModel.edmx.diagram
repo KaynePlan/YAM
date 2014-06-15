@@ -4,16 +4,16 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="165171bf47134ccdae204a945f4e4d42" Name="Diagram1" ZoomLevel="81">
-        <EntityTypeShape EntityType="YAM_StorageModel.Album" Width="1.5" PointX="10.5" PointY="2.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="YAM_StorageModel.Albumtitle" Width="1.5" PointX="7.75" PointY="2.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="YAM_StorageModel.Artist" Width="1.5" PointX="5" PointY="5.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="YAM_StorageModel.Genre" Width="1.5" PointX="0.5" PointY="3.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="YAM_StorageModel.Lang" Width="1.5" PointX="7.75" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="YAM_StorageModel.Lastsearch" Width="1.5" PointX="10.375" PointY="0.5" IsExpanded="true" />
+      <Diagram DiagramId="165171bf47134ccdae204a945f4e4d42" Name="Diagram1" ZoomLevel="92">
+        <EntityTypeShape EntityType="YAM_StorageModel.Album" Width="1.5" PointX="8.875" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="YAM_StorageModel.Albumtitle" Width="1.5" PointX="6.875" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="YAM_StorageModel.Artist" Width="1.5" PointX="4.75" PointY="4.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="YAM_StorageModel.Genre" Width="1.5" PointX="2.625" PointY="2.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="YAM_StorageModel.Lang" Width="1.5" PointX="6.875" PointY="2.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="YAM_StorageModel.Lastsearch" Width="1.5" PointX="8.875" PointY="2.875" IsExpanded="true" />
         <EntityTypeShape EntityType="YAM_StorageModel.Playlist" Width="1.5" PointX="0.5" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="YAM_StorageModel.Playlistitem" Width="1.5" PointX="3" PointY="0.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="YAM_StorageModel.Title" Width="1.5" PointX="5.125" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="YAM_StorageModel.Playlistitem" Width="1.5" PointX="2.625" PointY="0.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="YAM_StorageModel.Title" Width="1.5" PointX="4.75" PointY="0.5" IsExpanded="true" />
         <AssociationConnector Association="YAM_StorageModel.FK_Album_Albumtitle" ManuallyRouted="false" />
         <AssociationConnector Association="YAM_StorageModel.FK_Title_Albumtitle" ManuallyRouted="false" />
         <AssociationConnector Association="YAM_StorageModel.FK_Title_Genre" ManuallyRouted="false" />

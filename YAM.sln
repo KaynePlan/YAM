@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAM", "YAM\YAM.csproj", "{A8A11AB8-BEDF-41BE-9E83-F57208A7CA7F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YAM_Player", "..\YAM_Player\YAM_Player\YAM_Player.csproj", "{5C64C4D1-48DD-4994-8A76-43A980A2B25C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,6 +25,16 @@ Global
 		{A8A11AB8-BEDF-41BE-9E83-F57208A7CA7F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{A8A11AB8-BEDF-41BE-9E83-F57208A7CA7F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{A8A11AB8-BEDF-41BE-9E83-F57208A7CA7F}.Release|x86.ActiveCfg = Release|Any CPU
+		{5C64C4D1-48DD-4994-8A76-43A980A2B25C}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{5C64C4D1-48DD-4994-8A76-43A980A2B25C}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{5C64C4D1-48DD-4994-8A76-43A980A2B25C}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{5C64C4D1-48DD-4994-8A76-43A980A2B25C}.Debug|x86.ActiveCfg = Debug|x86
+		{5C64C4D1-48DD-4994-8A76-43A980A2B25C}.Debug|x86.Build.0 = Debug|x86
+		{5C64C4D1-48DD-4994-8A76-43A980A2B25C}.Release|Any CPU.ActiveCfg = Release|x86
+		{5C64C4D1-48DD-4994-8A76-43A980A2B25C}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{5C64C4D1-48DD-4994-8A76-43A980A2B25C}.Release|Mixed Platforms.Build.0 = Release|x86
+		{5C64C4D1-48DD-4994-8A76-43A980A2B25C}.Release|x86.ActiveCfg = Release|x86
+		{5C64C4D1-48DD-4994-8A76-43A980A2B25C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

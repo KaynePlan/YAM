@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using YAM_Player;
 
 namespace YAM
 {
@@ -9,10 +10,12 @@ namespace YAM
 
         public DataContext() { }
 
+        public UserControl1 ChildPlayer { get; set; }
+
         //Methode um den aktuellen Song, in der Datenbank zu aktualisieren.
-        public void UpdateTitleEntry(Title newValue)
+        public void UpdateTitleEntry(YAM_Player.Playlist valueChange)
         {
-            var song = db.Titles.FirstOrDefault(t => t.Id == newValue.Id);
+            var song = db.Titles.FirstOrDefault(t => t.Id == valueChange.Id);
 
             if (song != null)
             {
@@ -23,7 +26,6 @@ namespace YAM
                 {
                     db.SaveChanges();
 
-                    OnPropertyChanged("db");
                     UpdateGlobalMusicCollection();
                     UpdatePlaylistMusicCollection();
                 }

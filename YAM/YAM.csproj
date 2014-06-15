@@ -46,6 +46,7 @@
     <Reference Include="System.Data.Entity" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -198,12 +199,19 @@
     <Resource Include="Images\HP-Recycle-Empty-Dock.png" />
     <Resource Include="Images\HP-Recycle-Full-Dock.png" />
     <Resource Include="Images\rammstein-made-in-germany-album-cover.jpg" />
+    <Resource Include="Images\up-256.png" />
     <Content Include="YAM_Storage.sdf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\YAM_Player\YAM_Player\YAM_Player.csproj">
+      <Project>{5c64c4d1-48dd-4994-8a76-43a980a2b25c}</Project>
+      <Name>YAM_Player</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

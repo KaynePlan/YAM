@@ -72,7 +72,7 @@ namespace YAM
             metaTag.Titlename = String.IsNullOrEmpty(file.Tag.Title) ? GetFileName(file_info.Name) : file.Tag.Title;
             metaTag.Playcounter = 0;
 
-            var acodec = file.Properties.Codecs as TagLib.IAudioCodec;
+            var acodec = file.Properties.Codecs.FirstOrDefault() as TagLib.IAudioCodec;
 
             if (acodec != null)
                 metaTag.Bitrate = acodec.AudioBitrate;

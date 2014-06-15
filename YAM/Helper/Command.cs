@@ -138,5 +138,6 @@ namespace YAM
             this.Command = command;
             this.Parameter = parameter;
         }
+		
     }
 }

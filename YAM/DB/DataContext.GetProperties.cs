@@ -6,12 +6,18 @@ namespace YAM
 {
     public partial class DataContext : BaseClass
     {
+        #region Property variables
+
         private ObservableCollectionEx<Title> _GlobalMusic;
         private ObservableCollectionEx<Title> _PlaylistMusic;
         private ObservableCollectionEx<Artist> _ArtistCollection;
         private Dictionary<string, string> _Templates;
         private Artist _SelectedArtist;
         private Title _SelectedMusic;
+        private IEnumerable<Lang> _Language;
+        private IEnumerable<Genre> _Genres;
+
+        #endregion
 
         #region read only properties
 
@@ -21,6 +27,8 @@ namespace YAM
 
         public ObservableCollectionEx<Artist> ArtistCollection { get { return _ArtistCollection ?? (_ArtistCollection = new ObservableCollectionEx<Artist>(db.Artists)); } }
 
+        public String Notification { get { return String.Format(NotificationTemplate, NotificationCurrentSongCount, NotificationMaxSongCount); } }
+
         public Int32 GlobalMusicCount { get { return this.GlobalMusic.Count; } }
 
         public Int32 PlaylistMusicCount { get { return this.PlaylistMusic.Count; } }
@@ -29,87 +37,19 @@ namespace YAM
 
         //public String SelectedSongCover { get { return @"D:\Eigene Dokumente\GitHub\YAM\YAM\Images\rammstein-made-in-germany-album-cover.jpg"; } }
 
+        public String PlaylistPlayTimeString { get { return "Gesamte Spieldauer: " + new TimeSpan(PlaylistMusic.Sum(p => p.Playtime)).ToString(@"mm\:ss"); } }
+
+        public TimeSpan PlaylistPlayTime { get { return new TimeSpan(PlaylistMusic.Sum(p => p.Playtime)); } }
+
         public IEnumerable<Title> SelectedGlobalMusic { get { return GlobalMusic.Where(o => o.IsSelected); } }
 
         public IEnumerable<Title> SelectedPlaylistMusic { get { return PlaylistMusic.Where(o => o.IsSelected); } }
 
-        public Title SelectedMusic
-        {
-            get { return _SelectedMusic; }
-            set
-            {
-                if (_SelectedMusic == value)
-                    return;
+        public IEnumerable<Lang> Language { get { return _Language ?? (_Language = new List<Lang>().Union(db.Langs)); } }
 
-                _SelectedMusic = value;
+        public IEnumerable<Genre> Genres { get { return _Genres ?? (_Genres = db.Genres); } }
 
-                //Änderungen in dem Info Bereich, in die DB speichern
-                db.SaveChanges();
-
-                OnPropertyChanged("SelectedMusic");
-                OnPropertyChanged("ArtistCollection");
-            }
-        }
-
-        public String NewArtist
-        {
-            set
-            {
-                if (SelectedArtist != null)
-                    return;
-
-                if (!string.IsNullOrEmpty(value))
-                {
-                    var existsArtist = db.Artists.FirstOrDefault(a => a.Artistname == value);
-
-                    if (existsArtist == null)
-                    {
-                        var newArtist = new Artist()
-                        {
-                            Id = db.Artists.Max(a => a.Id) + 1,
-                            Artistname = value,
-                            Titles = (SelectedMusic as ICollection<Title>)
-                        };
-
-                        this.ArtistCollection.Add(newArtist);
-                        db.Artists.Add(newArtist);
-                    }
-                    else
-                        existsArtist.Titles.Add(SelectedMusic);
-
-                    try
-                    {
-                        db.SaveChanges();
-
-                        UpdateGlobalMusicCollection();
-                        UpdatePlaylistMusicCollection();
-                    }
-                    catch (Exception ex) { }
-
-                    OnPropertyChanged("ArtistCollection");
-                    OnPropertyChanged("NewArtist");
-                }
-            }
-        }
-
-        public Artist SelectedArtist
-        {
-            get { return this._SelectedMusic.Artists.FirstOrDefault(); }
-            set
-            {
-                if (_SelectedArtist == value)
-                    return;
-
-                _SelectedArtist = value;
-
-                OnPropertyChanged("SelectedArtist");
-                OnPropertyChanged("ArtistCollection");
-            }
-        }
-
-        public String Notification { get { return String.Format(NotificationTemplate, NotificationCurrentSongCount, NotificationMaxSongCount); } }
-
-        public String PlaylistPlayTime { get { return "Gesamte Spieldauer: " + new TimeSpan(PlaylistMusic.Sum(p => p.Playtime)).ToString(@"mm\:ss"); } }
+        public String ConvertedGenre { get { return (SelectedMusic.Genre.HasValue) ? Genres.First(g => g.Id == SelectedMusic.Genre).Genrename : String.Empty; } }
 
         public Dictionary<string, string> Templates
         {

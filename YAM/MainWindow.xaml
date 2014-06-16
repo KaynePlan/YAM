@@ -5,7 +5,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:wfc="clr-namespace:YAM_Player;assembly=YAM_Player"
         Title="YAM - Yet Another Mediaplayer" Height="650" Width="800"
-        MinHeight="650" MinWidth="700" WindowStartupLocation="CenterScreen">
+        MinHeight="650" MinWidth="750" WindowStartupLocation="CenterScreen">
 
     <Control.DataContext>
         <my:DataContext />
@@ -16,6 +16,8 @@
         <my:PlaytimeConverter x:Key="playtimeConverter" />
         <my:IndexConverter x:Key="IndexConverter" />
         <my:CounterConverter x:Key="CounterConverter" />
+        <my:DateFormatConverter x:Key="DateFormatConverter" />
+        <my:MultiCounterConverter x:Key="MultiCounterConverter" />
     </Window.Resources>
 
     <Grid>
@@ -110,7 +112,7 @@
                     <Button ToolTip="Zum Player übertragen" Command="{Binding AddToPlayer}">
                         <Image Source="Images/up-256.png" Width="26" Height="26" />
                     </Button>
-                    
+
                     <Button ToolTip="Hinzufügen" Command="{Binding AddToPlaylist}">
                         <Image Source="Images/arrow-add-256.png" Width="26" Height="26" />
                     </Button>
@@ -149,11 +151,19 @@
             <DockPanel Grid.Column="3" Grid.Row="0">
                 <GroupBox>
                     <GroupBox.Header>
-                        <Binding Path="PlaylistMusicCount" Converter="{StaticResource CounterConverter}">
+                        <!--<Binding Path="PlaylistMusicCount" Converter="{StaticResource CounterConverter}">
                             <Binding.ConverterParameter>
-                                <sys:String>Playlist : ({0})</sys:String>
+                                <sys:String>Playlist : ({0}) Gesamtspielzeit : ({1})</sys:String>
                             </Binding.ConverterParameter>
-                        </Binding>
+                        </Binding>-->
+
+                        <MultiBinding Converter="{StaticResource MultiCounterConverter}">
+                            <Binding Path="PlaylistMusicCount" />
+                            <Binding Path="PlaylistPlayTime" />
+                            <MultiBinding.ConverterParameter>
+                                <sys:String>Playlist : ({0}) Gesamtspielzeit : ({1})</sys:String>
+                            </MultiBinding.ConverterParameter>
+                        </MultiBinding>
                     </GroupBox.Header>
 
                     <ListView DockPanel.Dock="Bottom" ItemsSource="{Binding PlaylistMusic}">
@@ -192,7 +202,7 @@
             </DockPanel>
 
             <!--Info Bereich-->
-            <DockPanel Grid.Column="4" Grid.Row="0" LastChildFill="True">
+            <!--<DockPanel Grid.Column="4" Grid.Row="0" LastChildFill="True">
                 <GroupBox Header="Playlist Details" MinHeight="50" DockPanel.Dock="Top">
                     <Grid Margin="3">
                         <Grid.RowDefinitions>
@@ -222,16 +232,16 @@
                             </TextBlock.Text>
                         </TextBlock>
 
-                        <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding PlaylistPlayTime}" />
+                        <TextBlock Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2" Text="{Binding PlaylistPlayTimeString}" />
 
                         <Button Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Margin="3" HorizontalAlignment="Right"
                                 Width="100" Content="Speichern" ToolTip="Playliste speichern" />
                     </Grid>
-                </GroupBox>
+                </GroupBox>-->
 
 
-                <!--<GroupBox Header="Albumcover" DockPanel.Dock="Bottom">-->
-                <!--<Grid Margin="3">
+            <!--<GroupBox Header="Albumcover" DockPanel.Dock="Bottom">-->
+            <!--<Grid Margin="3">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="*" />
                         </Grid.RowDefinitions>
@@ -245,69 +255,66 @@
                                Stretch="Uniform" />
                     </Grid>-->
 
-                <GroupBox Header="MP3 Info" DockPanel.Dock="Bottom">
-                    <StackPanel Margin="3">
-                        <TextBlock Text="Titel" />
-                        <TextBox Text="{Binding Path=SelectedMusic.Titlename}" />
+            <GroupBox Grid.Column="4" Grid.Row="0" Header="MP3 Info" DockPanel.Dock="Bottom">
+                <StackPanel Margin="3">
+                    <TextBlock Text="Titel" />
+                    <TextBox Text="{Binding Path=SelectedMusic.Titlename}" />
 
-                        <TextBlock Text="Künstler" />
-                        <!--<TextBox Text="{Binding Path=SelectedMusic.Artists}" />-->
-                        <ComboBox ItemsSource="{Binding ArtistCollection}" DisplayMemberPath="Artistname"
+                    <TextBlock Text="Künstler" />
+                    <ComboBox ItemsSource="{Binding ArtistCollection}" DisplayMemberPath="Artistname"
                                   IsEditable="True" Text="{Binding NewArtist, UpdateSourceTrigger=LostFocus}"
-                                  SelectedItem="{Binding SelectedArtist}" SelectedValue="{Binding SelectedArtist}" />
-                        <!--Converter-->
+                                  SelectedItem="{Binding SelectedArtist}" SelectedValue="{Binding SelectedArtist.Id}" SelectedValuePath="Id" />
 
-                        <TextBlock Text="Genre" />
-                        <TextBox Text="{Binding Path=SelectedMusic.Genre}" />
-                        <!--Converter-->
-                        
-                        <TextBlock Text="Sprache" />
-                        <TextBox Text="{Binding Path=SelectedMusic.Lang}" />
-                        <!--Converter dropdown-->
+                    <TextBlock Text="Genre" />
+                    <TextBox Text="{Binding ConvertedGenre, Mode=OneWay}" IsReadOnly="True" />
 
-                        <TextBlock Text="Erscheinungsjahr" />
-                        <TextBox Text="{Binding Path=SelectedMusic.Releaseyear}" />
+                    <TextBlock Text="Sprache" />
+                    <ComboBox ItemsSource="{Binding Language}" DisplayMemberPath="Langname" IsEditable="True"
+                              SelectedItem="{Binding SelectedLanguage}" SelectedValue="{Binding SelectedMusic.Lang}" SelectedValuePath="Id" />
 
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                    <TextBlock Text="Erscheinungsjahr" />
+                    <TextBox Text="{Binding Path=SelectedMusic.Releaseyear}" />
 
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Spieldauer" />
-                                <TextBox Text="{Binding Path=SelectedMusic.Playtime, Converter={StaticResource playtimeConverter}}" IsReadOnly="True" IsEnabled="False" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Bitrate" />
-                                <TextBox IsReadOnly="True" IsEnabled="False">
-                                    <Binding Path="SelectedMusic.Bitrate" Converter="{StaticResource CounterConverter}">
-                                        <Binding.ConverterParameter>
-                                            <sys:String>{0} kBit/s</sys:String>
-                                        </Binding.ConverterParameter>
-                                    </Binding>
-                                </TextBox>
-                            </StackPanel>
-                        </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
 
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Spieldauer" />
+                            <TextBox Text="{Binding Path=SelectedMusic.Playtime, Converter={StaticResource playtimeConverter}}" IsReadOnly="True" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Bitrate" />
+                            <TextBox IsReadOnly="True">
+                                <Binding Path="SelectedMusic.Bitrate" Converter="{StaticResource CounterConverter}">
+                                    <Binding.ConverterParameter>
+                                        <sys:String>{0} kBit/s</sys:String>
+                                    </Binding.ConverterParameter>
+                                </Binding>
+                            </TextBox>
+                        </StackPanel>
+                    </Grid>
 
-                            <StackPanel Grid.Column="0">
-                                <TextBlock Text="Zuletzt gespielt" />
-                                <TextBox Text="{Binding Path=SelectedMusic.Lastplayed}" IsReadOnly="True" IsEnabled="False" />
-                            </StackPanel>
-                            <StackPanel Grid.Column="1">
-                                <TextBlock Text="Gespielt" />
-                                <TextBox Text="{Binding Path=SelectedMusic.Playcounter}" IsReadOnly="True" IsEnabled="False" />
-                            </StackPanel>
-                        </Grid>
-                    </StackPanel>
-                </GroupBox>
-            </DockPanel>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0">
+                            <TextBlock Text="Zuletzt gespielt" />
+                            <TextBox Text="{Binding Path=SelectedMusic.Lastplayed, Converter={StaticResource DateFormatConverter}}" IsReadOnly="True" />
+                        </StackPanel>
+                        <StackPanel Grid.Column="1">
+                            <TextBlock Text="Gespielt" />
+                            <TextBox Text="{Binding Path=SelectedMusic.Playcounter}" IsReadOnly="True" />
+                        </StackPanel>
+                    </Grid>
+                </StackPanel>
+            </GroupBox>
+            <!--</DockPanel>-->
         </Grid>
     </Grid>
 

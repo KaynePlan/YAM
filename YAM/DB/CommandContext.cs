@@ -76,6 +76,8 @@ namespace YAM
                     db.SaveChanges();
                 }
 
+                this._ArtistCollection = null;
+
                 UpdateGlobalMusicCollection();
 
                 CloseWindow(importWindow);
@@ -170,6 +172,9 @@ namespace YAM
                 }
 
                 db.SaveChanges();
+
+                this._ArtistCollection = null;
+
                 UpdateGlobalMusicCollection();
 
                 CloseWindow(deleteWindow);
@@ -178,11 +183,9 @@ namespace YAM
 
         private void AddToPlaylist_Executed(object obj)
         {
-            //var selecteditems = SelectedGlobalMusic.ToList<Title>();
-
             foreach (var song in SelectedGlobalMusic)
                 if (!PlaylistMusic.Any(s => s.Id == song.Id))
-                    this.PlaylistMusic.Add(song);//.Clone());
+                    this.PlaylistMusic.Add(song);
 
             UpdatePlaylistMusicCollection();
         }

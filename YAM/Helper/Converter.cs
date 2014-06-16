@@ -69,6 +69,19 @@ namespace YAM
         }
     }
 
+    public class MultiCounterConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return String.Format((String)parameter, (Int32)values[0], ((TimeSpan)values[1]).ToString(@"mm\:ss"));
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
     public class InfoConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
@@ -82,6 +95,20 @@ namespace YAM
             throw new NotImplementedException();
         }
     }
+
+    public class DateFormatConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            return String.Format(@"{0:dd.MM.yyyy HH:mm:ss}", value);
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 
     public static class ToListEx
     {
